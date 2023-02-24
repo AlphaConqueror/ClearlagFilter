@@ -1,0 +1,6 @@
+name: ClearlagFilter
+version: '${version}'
+description: Prevents certain modded entities from being removed by ClearLag.
+main: net.dirtcraft.clearlagfilter.Cli
+author: AlphaConqueror
+depend: [ClearLag]

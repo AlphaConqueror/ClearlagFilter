@@ -9,19 +9,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class ClearlagManager extends DirtListener {
 
-    public ClearlagManager(JavaPlugin javaPlugin) {
+    public ClearlagManager(final JavaPlugin javaPlugin) {
         super(javaPlugin, "ClearlagManager");
     }
 
     @EventHandler
     public void onEntityRemove(final EntityRemoveEvent event) {
-        int beforeSize = event.getEntityList().size();
+        final int beforeSize = event.getEntityList().size();
 
-        for (String filter : Config.getFilter()) {
+        for (final String filter : Config.getFilter()) {
             event.getEntityList().removeIf(entity -> isEntityFiltered(entity, filter));
         }
 
-        int filtered = beforeSize - event.getEntityList().size();
+        final int filtered = beforeSize - event.getEntityList().size();
 
         if (filtered > 0) {
             Logger.info("Prevented %d filtered entities from being removed.",
@@ -29,9 +29,10 @@ public class ClearlagManager extends DirtListener {
         }
     }
 
-    private boolean isEntityFiltered(Entity entity, String filter) {
-        String entityType = entity.getType().name();
+    private boolean isEntityFiltered(final Entity entity, final String filter) {
+        final String entityType = entity.getType().name();
 
-        return filter.equalsIgnoreCase(entityType) || filter.equalsIgnoreCase(entityType.replace(' ', '_'));
+        return filter.equalsIgnoreCase(entityType)
+                || filter.equalsIgnoreCase(entityType.replace(' ', '_'));
     }
 }

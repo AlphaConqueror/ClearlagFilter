@@ -1,6 +1,11 @@
+import com.github.spotbugs.snom.SpotBugsTask
+
 plugins {
     id 'application'
     id 'java'
+    id "pmd"
+    id "checkstyle"
+    id "com.github.spotbugs" version "5.0.8"
 }
 
 group = 'net.dirtcraft'
@@ -10,15 +15,6 @@ repositories {
     mavenCentral()
     maven {
         url = 'https://repo.mikeprimm.com/'
-    }
-    maven {
-        url = 'https://repo.dmulloy2.net/repository/public/'
-    }
-    maven {
-        url = 'https://repository.mulesoft.org/nexus/content/repositories/public/'
-    }
-    maven {
-        url = 'https://repository.liferay.com/nexus/content/repositories/public/'
     }
 }
 
@@ -31,6 +27,11 @@ dependencies {
     // repositories that are not being hosted (anymore)
     // adds: ClearLag v3.2.2 (https://dev.bukkit.org/projects/clearlagg)
     compileOnly fileTree(dir: 'libs', includes: ['*.jar'])
+
+    spotbugsPlugins "com.mebigfatguy.sb-contrib:sb-contrib:7.4.7"
+    spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.12.0'
+
+    checkstyle 'com.puppycrawl.tools:checkstyle:8.45.1'
 }
 
 def targetJavaVersion = 8
@@ -63,6 +64,53 @@ if (hasProperty('buildScan')) {
     buildScan {
         termsOfServiceUrl = 'https://gradle.com/terms-of-service'
         termsOfServiceAgree = 'yes'
+    }
+}
+
+build {
+    dependsOn check
+}
+
+test {
+    useJUnitPlatform()
+}
+
+checkstyle {
+    toolVersion = "8.8"
+    showViolations = true
+    maxWarnings(0)
+    maxErrors(0)
+    configFile file("${projectDir}/config/checkstyle/checkstyle.xml")
+    reportsDir file("${buildDir}/reports/checkstyle")
+}
+
+tasks.withType(Checkstyle) {
+    reports {
+        html.enabled true
+        xml.enabled false
+    }
+}
+
+tasks.withType(Pmd) {
+    incrementalAnalysis.set(false)
+    reports {
+        html.enabled true
+        xml.enabled true
+    }
+    ruleSets = ["${projectDir}/config/pmd/pmd.xml"]
+}
+
+spotbugs {
+    ignoreFailures.set(false)
+    effort = "max"
+    includeFilter.set(file("${projectDir}/config/spotbugs/include.xml"))
+    excludeFilter.set(file("${projectDir}/config/spotbugs/exclude.xml"))
+}
+
+tasks.withType(SpotBugsTask) {
+    reports {
+        html.enabled true
+        xml.enabled false
     }
 }
 

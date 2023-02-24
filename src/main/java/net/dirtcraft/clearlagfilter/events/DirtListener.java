@@ -25,8 +25,4 @@ public abstract class DirtListener implements Listener {
         HandlerList.unregisterAll(this);
         Logger.info("Unregistered listener '%s'.", this.name);
     }
-
-    public void onDisable() {
-        /* intentionally empty method body */
-    }
 }

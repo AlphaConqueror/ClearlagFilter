@@ -18,6 +18,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -103,7 +104,7 @@ public class Config {
     }
 
     public static List<String> getFilter() {
-        return filter;
+        return Collections.unmodifiableList(filter);
     }
 
     public static void onDisable() {

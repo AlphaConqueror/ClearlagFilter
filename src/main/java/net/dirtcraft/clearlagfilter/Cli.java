@@ -32,9 +32,11 @@ public final class Cli extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         // disable listeners
-        this.listeners.forEach(DirtListener::onDisable);
         this.listeners.forEach(DirtListener::unregister);
         this.listeners.clear();
+
+        // clear cache
+        Config.onDisable();
     }
 
     private void registerEvents() {
